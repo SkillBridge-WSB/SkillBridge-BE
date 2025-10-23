@@ -1,4 +1,4 @@
-package pl.wsb.merito.skillbridge;
+package pl.wsb.merito.skillbridge.rest.controller;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
