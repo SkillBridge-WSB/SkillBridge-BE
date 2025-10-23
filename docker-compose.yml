@@ -1,4 +1,3 @@
-version: "2"
 services:
   api:
     build: .
@@ -7,6 +6,7 @@ services:
       - DB_ADDRESS=db
       - DB_USER=skillbridge
       - DB_PASSWORD=skillbridge
+      - SPRING_SECURITY_SHA_KEY=wF2mY8xGm0UoZq3dL7CkN1r5s9V2b4y6h8j0p2t4v6A=
     ports:
       - "8080:8080"
     depends_on:
