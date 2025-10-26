@@ -2,13 +2,12 @@ package pl.wsb.merito.skillbridge.rest.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 import pl.wsb.merito.skillbridge.domain.service.auth.AuthService;
 import pl.wsb.merito.skillbridge.rest.request.RegisterRequest;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "{$request-path}")
@@ -16,9 +15,10 @@ import pl.wsb.merito.skillbridge.rest.request.RegisterRequest;
 public class AuthController {
     private final AuthService authService;
 
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
+    @PostMapping(path = "/register", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public Map<String, String> register(@RequestBody RegisterRequest request) {
         authService.register(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Successfully registered");
+        return Map.of("message", "Successfully registered");
     }
 }
