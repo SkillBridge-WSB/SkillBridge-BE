@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pl.wsb.merito.skillbridge.domain.model.Role;
+import pl.wsb.merito.skillbridge.domain.model.User;
 
 import java.util.UUID;
 
@@ -27,4 +29,17 @@ public class UserEntity {
     private String role;
     @Column(name = "created_at", nullable = false, updatable = false)
     private Long created_at;
+
+    public User toDomain() {
+        return User.builder()
+                .id(id)
+                .email(email)
+                .password(password)
+                .name(name)
+                .bio(bio)
+                .image_url(image_url)
+                .role(Role.getRole(role))
+                .created_at(created_at)
+                .build();
+    }
 }
