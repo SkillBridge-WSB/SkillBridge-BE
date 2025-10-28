@@ -1,6 +1,7 @@
 package pl.wsb.merito.skillbridge.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -23,12 +24,16 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import pl.wsb.merito.skillbridge.config.filter.JsonUsernamePasswordAuthenticationFilter;
+import pl.wsb.merito.skillbridge.config.filter.JwtAuthFilter;
 
 import java.util.List;
 
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig {
+
+    @Autowired
+    private JwtAuthFilter jwtAuthFilter;
 
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http, PasswordEncoder passwordEncoder, UserDetailsService userDetailsService) throws Exception {
@@ -68,11 +73,13 @@ public class SecurityConfig {
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/auth/**", "/error", "/api/hello", "/swagger-ui/index.html", "/**").permitAll()
+                        .requestMatchers("/auth/**", "/error", "/api/hello", "/swagger-ui/index.html").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
-                .addFilterAt(jsonUsernamePasswordAuthenticationFilter(authenticationManager, successHandler, failureHandler), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(jsonUsernamePasswordAuthenticationFilter(authenticationManager, successHandler, failureHandler), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 

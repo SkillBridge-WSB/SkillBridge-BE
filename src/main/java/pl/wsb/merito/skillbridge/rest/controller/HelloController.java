@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin(origins = "*")
-@RequestMapping("/api")
+@RequestMapping(value = "{$request-path}")
 public class HelloController {
 
     @GetMapping("/hello")
