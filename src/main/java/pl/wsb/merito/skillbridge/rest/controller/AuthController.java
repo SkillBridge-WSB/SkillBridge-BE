@@ -10,7 +10,7 @@ import pl.wsb.merito.skillbridge.rest.request.RegisterRequest;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "{$request-path}")
+@RequestMapping(value = "/auth")
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
