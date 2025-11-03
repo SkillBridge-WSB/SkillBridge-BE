@@ -39,18 +39,21 @@ CREATE INDEX IF NOT EXISTS idx_lessons_tutor ON lessons(tutor_id);
 CREATE TABLE IF NOT EXISTS chats (
     chat_id     uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     student_id  uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    tutor_id    uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE
+    tutor_id    uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    created_at  BIGINT NOT NULL
 );
 CREATE UNIQUE INDEX IF NOT EXISTS uq_chats_pair ON chats(student_id, tutor_id);
 
 -- messages (FK to chats by chat_id)
 CREATE TABLE IF NOT EXISTS messages (
-    id       uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    message  text NOT NULL,
-    time     timestamp NOT NULL DEFAULT now(),
-    chat_id  uuid NOT NULL REFERENCES chats(chat_id) ON DELETE CASCADE
+    id          uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    message     text NOT NULL,
+    timestamp   BIGINT NOT NULL DEFAULT (EXTRACT(EPOCH FROM now()))::bigint,
+    chat_id     uuid NOT NULL REFERENCES chats(chat_id) ON DELETE CASCADE,
+    sender_id   uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE
 );
 CREATE INDEX IF NOT EXISTS idx_messages_chat_id ON messages(chat_id);
+CREATE INDEX IF NOT EXISTS idx_messages_chat_time ON messages(chat_id, timestamp);
 
 -- calendars (many-to-one to users)
 CREATE TABLE IF NOT EXISTS calendars (

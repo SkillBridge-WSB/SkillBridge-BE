@@ -29,6 +29,7 @@ public class AuthenticationHandler {
 
             Map<String, String> body = new HashMap<>();
             body.put("token", token);
+            body.put("id", principal.getId().toString());
             body.put("email", principal.getUsername());
             body.put("name", principal.getName());
 
