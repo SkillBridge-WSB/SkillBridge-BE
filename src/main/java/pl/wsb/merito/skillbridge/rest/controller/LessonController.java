@@ -25,6 +25,7 @@ public class LessonController {
     @PreAuthorize("hasRole('STUDENT')")
     public Response.Lesson book(@CurrentUserId UUID userId,
                                 @RequestBody Request.BookLesson req) {
+        log.debug("Booking lesson for userId: {} with request: {}", userId, req);
         return service.book(userId, req);
     }
 
@@ -33,12 +34,14 @@ public class LessonController {
     public Response.Lesson accept(@CurrentUserId UUID userId,
                                   @PathVariable("id") UUID lessonId,
                                   @RequestParam String action) {
+        log.debug("Tutor userId: {} accepting lessonId: {} with action: {}", userId, lessonId, action);
         return service.accept(userId, lessonId, action);
     }
 
     @PatchMapping("/{id}/cancel")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void cancel(@CurrentUserId UUID userId, @CurrentUserRole Role role, @PathVariable("id") UUID lessonId) {
+        log.debug("UserId: {} with role: {} cancelling lessonId: {}", userId, role, lessonId);
         service.cancel(userId, role, lessonId);
     }
 }
