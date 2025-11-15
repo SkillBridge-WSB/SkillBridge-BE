@@ -2,24 +2,40 @@ package pl.wsb.merito.skillbridge.rest.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
+import pl.wsb.merito.skillbridge.config.web.parameter.CurrentUserId;
 import pl.wsb.merito.skillbridge.domain.service.user.UserService;
-import pl.wsb.merito.skillbridge.rest.response.UserResponse;
+import pl.wsb.merito.skillbridge.rest.request.Request;
+import pl.wsb.merito.skillbridge.rest.response.Response;
+
+import java.util.UUID;
 
 @Slf4j
 @RestController
-@RequestMapping(value = "{$request-path}")
+@RequestMapping(value = "${request-path}/users/me")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @GetMapping("/user-details")
-    public UserResponse getUserDetails(@AuthenticationPrincipal UserDetails user) {
-        return userService.getUserDetails(user.getUsername());
+    @GetMapping("/details")
+    public Response.User getUserDetails(@CurrentUserId UUID userId) {
+        log.debug("Fetching details for user ID: {}", userId);
+        return userService.getUserDetails(userId);
+    }
+
+    @PutMapping
+    public Response.User updateUser(@CurrentUserId UUID userId,
+                                   @RequestBody Request.UpdateUser req) {
+        log.debug("Updating user ID: {} with data: {}", userId, req);
+        return userService.updateUser(userId, req);
+    }
+
+    @DeleteMapping
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
+    public void deleteUser(@CurrentUserId UUID userId) {
+        log.debug("Deleting user ID: {}", userId);
+        userService.deleteUser(userId);
     }
 }
