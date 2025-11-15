@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.ToString;
 import pl.wsb.merito.skillbridge.adapter.database.user.UserEntity;
-import pl.wsb.merito.skillbridge.rest.response.UserResponse;
+import pl.wsb.merito.skillbridge.rest.response.Response;
 
 import java.util.UUID;
 
@@ -31,14 +31,14 @@ public class User {
         return new UserEntity(id, email, password, name, bio, image_url, role.toString(), created_at);
     }
 
-    public UserResponse toApiResponse() {
-        return UserResponse.builder()
+    public Response.User toApiResponse() {
+        return Response.User.builder()
                 .id(id)
                 .email(email)
                 .name(name)
                 .bio(bio)
-                .image_url(image_url)
-                .role(role)
+                .imageUrl(image_url)
+                .role(role.toString())
                 .build();
     }
 }

@@ -26,11 +26,13 @@ CREATE INDEX IF NOT EXISTS idx_subjects_user_id ON subjects(user_id);
 
 -- lessons (references users; subject_name kept as provided)
 CREATE TABLE IF NOT EXISTS lessons (
+    id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
     student_id    uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     tutor_id      uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    subject_name  varchar NOT NULL,
-    time          timestamp NOT NULL,
-    PRIMARY KEY (student_id, tutor_id, subject_name, time)
+    subject_id uuid NOT NULL REFERENCES subjects(id) ON DELETE CASCADE,
+    slot_id uuid NOT NULL REFERENCES calendars(id) ON DELETE CASCADE,
+    status       varchar NOT NULL,
+    UNIQUE(student_id, tutor_id, slot_id, subject_id)
 );
 CREATE INDEX IF NOT EXISTS idx_lessons_student ON lessons(student_id);
 CREATE INDEX IF NOT EXISTS idx_lessons_tutor ON lessons(tutor_id);

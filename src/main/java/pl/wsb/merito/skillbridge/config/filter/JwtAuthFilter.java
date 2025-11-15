@@ -1,7 +1,9 @@
 package pl.wsb.merito.skillbridge.config.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,10 +34,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             HttpServletRequest request,
             HttpServletResponse response,
             FilterChain filterChain
-    ) {
+    ) throws ServletException, IOException {
 
         try {
-            String authHeader = request.getHeader("x-authorization-token");
+            String authHeader = request.getHeader("x-auth-token");
             String token;
             String email = null;
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
@@ -50,7 +52,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
             filterChain.doFilter(request, response);
-        } catch (Exception ex) {
+        } catch (JwtException exception) {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
