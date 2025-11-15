@@ -63,7 +63,7 @@ public class LessonService {
         } else {
              lesson = lessonRepository.findByIdAndStudentId(lessonId, userId).orElseThrow();
         }
-        lesson.setStatus(Status.CANCELLED.getValue());
+        lesson.setStatus(Status.CANCELED.getValue());
         lesson.getSlot().setIsAvailable(true);
     }
 
