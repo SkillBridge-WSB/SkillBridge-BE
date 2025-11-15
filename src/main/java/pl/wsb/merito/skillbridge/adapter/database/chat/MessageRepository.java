@@ -6,5 +6,5 @@ import java.util.List;
 import java.util.UUID;
 
 public interface MessageRepository extends JpaRepository<MessageEntity, UUID> {
-    List<MessageEntity> findByChatOrderByTimestampAsc(ChatEntity chat);
+    List<MessageEntity> findByChatIdOrderByTimestampAsc(UUID chatId);
 }

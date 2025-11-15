@@ -31,7 +31,7 @@ public class ChatEntity {
 
     public Chat toDomain() {
         return Chat.builder()
-                .id(id)
+                .chatId(id)
                 .studentId(studentId)
                 .tutorId(tutorId)
                 .createdAt(createdAt)

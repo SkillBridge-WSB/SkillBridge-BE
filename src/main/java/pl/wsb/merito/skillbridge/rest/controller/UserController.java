@@ -20,6 +20,6 @@ public class UserController {
 
     @GetMapping("/user-details")
     public UserResponse getUserDetails(@AuthenticationPrincipal UserDetails user) {
-        return userService.getUserDetails(user.getUsername()).toApiResponse();
+        return userService.getUserDetails(user.getUsername());
     }
 }

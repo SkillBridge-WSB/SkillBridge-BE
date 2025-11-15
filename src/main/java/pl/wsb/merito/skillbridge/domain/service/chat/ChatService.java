@@ -11,6 +11,8 @@ import pl.wsb.merito.skillbridge.adapter.database.user.UserRepository;
 import pl.wsb.merito.skillbridge.domain.model.Chat;
 import pl.wsb.merito.skillbridge.domain.model.Message;
 import pl.wsb.merito.skillbridge.domain.model.User;
+import pl.wsb.merito.skillbridge.rest.response.ChatMessageResponse;
+import pl.wsb.merito.skillbridge.rest.response.ChatResponse;
 
 import java.time.Instant;
 import java.util.List;
@@ -23,26 +25,21 @@ public class ChatService {
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
 
-    public Chat findOrCreateChat(UUID studentId, UUID tutorId) {
+    public ChatResponse findOrCreateChat(UUID studentId, UUID tutorId) {
         return chatRepository.findByStudentIdAndTutorId(studentId, tutorId)
                 .map(ChatEntity::toDomain)
+                .map(Chat::toApiResponse)
                 .orElseGet(() -> {
                     Chat newChat = Chat.builder()
-                            .id(UUID.randomUUID())
+                            .chatId(UUID.randomUUID())
                             .studentId(studentId)
                             .tutorId(tutorId)
                             .createdAt(Instant.now().getEpochSecond())
                             .build();
                     // Set other fields as necessary
                     chatRepository.save(newChat.toEntity());
-                    return newChat;
+                    return newChat.toApiResponse();
                 });
-    }
-
-    public Chat findChat(UUID chatId) {
-        return chatRepository.findById(chatId)
-                .map(ChatEntity::toDomain)
-                .orElseThrow(() -> new RuntimeException("Chat not found"));
     }
 
     public Message saveMessage(UUID chatId, UUID senderId, String message) {
@@ -63,10 +60,11 @@ public class ChatService {
         return msg;
     }
 
-    public List<Message> getMessages(UUID chatId) {
-        Chat chat = chatRepository.findById(chatId)
-                .map(ChatEntity::toDomain)
-                .orElseThrow(() -> new RuntimeException("Chat not found"));
-        return messageRepository.findByChatOrderByTimestampAsc(chat.toEntity()).stream().map(MessageEntity::toDomain).toList();
+    public List<ChatMessageResponse> getMessages(UUID chatId) {
+        return messageRepository.findByChatIdOrderByTimestampAsc(
+                chatId).stream()
+                .map(MessageEntity::toDomain)
+                .map(Message::toApiResponse)
+                .toList();
     }
 }
