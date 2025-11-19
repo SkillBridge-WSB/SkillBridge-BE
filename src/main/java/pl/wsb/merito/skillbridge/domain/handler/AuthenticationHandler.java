@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
@@ -14,6 +15,7 @@ import pl.wsb.merito.skillbridge.domain.service.auth.UserPrincipal;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -25,7 +27,15 @@ public class AuthenticationHandler {
     public AuthenticationSuccessHandler successHandler() {
         return (request, response, authentication) -> {
             UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
-            String token = jwtService.generateToken(principal.getId().toString(), principal.getUsername());
+
+            String roles =  principal.getAuthorities()
+                    .stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .filter(r -> r.startsWith("ROLE_"))
+                    .map(r -> r.substring(5)) // Remove "ROLE_" prefix
+                    .collect(Collectors.joining(","));
+
+            String token = jwtService.generateToken(principal.getId().toString(), principal.getUsername(), roles);
 
             Map<String, String> body = new HashMap<>();
             body.put("token", token);

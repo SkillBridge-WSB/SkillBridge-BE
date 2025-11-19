@@ -2,8 +2,13 @@ package pl.wsb.merito.skillbridge.domain.service.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import pl.wsb.merito.skillbridge.adapter.database.user.UserEntity;
 import pl.wsb.merito.skillbridge.adapter.database.user.UserRepository;
-import pl.wsb.merito.skillbridge.rest.response.UserResponse;
+import pl.wsb.merito.skillbridge.rest.request.Request;
+import pl.wsb.merito.skillbridge.rest.response.Response;
+
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -11,7 +16,23 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public UserResponse getUserDetails(String email) {
-        return userRepository.findByEmail(email).orElseThrow().toDomain().toApiResponse();
+    public Response.User getUserDetails(UUID userId) {
+        return userRepository.findById(userId).orElseThrow().toDomain().toApiResponse();
+    }
+
+    @Transactional
+    public Response.User updateUser(UUID userId, Request.UpdateUser req) {
+        UserEntity entity = userRepository.findById(userId).orElseThrow();
+        if (req.name() != null) entity.setName(req.name());
+        if (req.bio() != null) entity.setBio(req.bio());
+        if (req.imageUrl() != null) entity.setImage_url(req.imageUrl());
+        UserEntity saved = userRepository.save(entity);
+        return saved.toDomain().toApiResponse();
+    }
+
+    @Transactional
+    public void deleteUser(UUID userId) {
+        UserEntity entity = userRepository.findById(userId).orElseThrow();
+        userRepository.delete(entity);
     }
 }
