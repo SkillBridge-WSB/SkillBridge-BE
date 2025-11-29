@@ -35,7 +35,7 @@ public class User {
             subjects = new ArrayList<>();
         }
 
-        return new UserEntity(id, email, password, name, bio, image_url, role.toString(), created_at, subjects.stream().map(s -> s.toEntity(this)).toList());
+        return new UserEntity(id, email, password, name, bio, image_url, role.toString(), created_at, subjects.stream().map(s -> s.toEntity(this)).toList(), null);
     }
 
     public Response.User toApiResponse() {
