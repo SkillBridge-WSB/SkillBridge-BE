@@ -1,5 +1,6 @@
 package pl.wsb.merito.skillbridge.rest.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,7 +18,7 @@ public class AuthController {
 
     @PostMapping(path = "/register", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public Map<String, String> register(@RequestBody RegisterRequest request) {
+    public Map<String, String> register(@Valid @RequestBody RegisterRequest request) {
         authService.register(request);
         return Map.of("message", "Successfully registered");
     }

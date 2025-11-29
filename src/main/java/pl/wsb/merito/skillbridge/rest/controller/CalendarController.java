@@ -1,5 +1,6 @@
 package pl.wsb.merito.skillbridge.rest.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -24,7 +25,7 @@ public class CalendarController {
     @PostMapping("/slots")
     @PreAuthorize("hasRole('TUTOR')")
     public Response.CalendarSlot create(@CurrentUserId UUID userId,
-                                        @RequestBody Request.CreateCalendarSlot req) {
+                                        @Valid @RequestBody Request.CreateCalendarSlot req) {
         log.debug("Creating slot for tutor '{}'", userId);
         return service.createSlot(userId, req);
     }
