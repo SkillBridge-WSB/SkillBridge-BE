@@ -20,10 +20,6 @@ public class StudentService {
 
     private final UserRepository userRepository;
 
-    public List<UserListItemResponse> getAllStudents() {
-        return userRepository.findAllByRole(Role.STUDENT.toString()).stream().map(UserEntity::toUserListItemResponse).toList();
-    }
-
     @Transactional
     public Response.Swipe swipe(UUID userId,Request.Swipe req) {
         UserEntity student = userRepository.findById(userId).orElseThrow();
