@@ -45,6 +45,7 @@ public class UserEntity {
                 .image_url(image_url)
                 .role(Role.getRole(role))
                 .created_at(created_at)
+                .subjects(subjects.stream().map(SubjectEntity::toDomain).toList())
                 .build();
     }
 
