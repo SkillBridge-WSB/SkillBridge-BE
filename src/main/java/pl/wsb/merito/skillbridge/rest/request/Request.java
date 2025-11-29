@@ -4,6 +4,7 @@ package pl.wsb.merito.skillbridge.rest.request;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.*;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
