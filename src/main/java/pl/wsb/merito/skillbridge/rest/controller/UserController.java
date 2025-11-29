@@ -1,5 +1,6 @@
 package pl.wsb.merito.skillbridge.rest.controller;
 
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,7 @@ public class UserController {
 
     @PutMapping
     public Response.User updateUser(@CurrentUserId UUID userId,
-                                   @RequestBody Request.UpdateUser req) {
+                                    @Valid @RequestBody Request.UpdateUser req) {
         log.debug("Updating user ID: {} with data: {}", userId, req);
         return userService.updateUser(userId, req);
     }

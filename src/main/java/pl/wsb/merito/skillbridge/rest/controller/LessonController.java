@@ -1,5 +1,6 @@
 package pl.wsb.merito.skillbridge.rest.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,7 @@ public class LessonController {
     @PostMapping
     @PreAuthorize("hasRole('STUDENT')")
     public Response.Lesson book(@CurrentUserId UUID userId,
-                                @RequestBody Request.BookLesson req) {
+                                @Valid @RequestBody Request.BookLesson req) {
         log.debug("Booking lesson for userId: {} with request: {}", userId, req);
         return service.book(userId, req);
     }
