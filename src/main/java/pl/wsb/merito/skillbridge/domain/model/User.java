@@ -7,6 +7,8 @@ import lombok.ToString;
 import pl.wsb.merito.skillbridge.adapter.database.user.UserEntity;
 import pl.wsb.merito.skillbridge.rest.response.Response;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @ToString
@@ -26,9 +28,14 @@ public class User {
     @NonNull
     private Role role;
     private Long created_at; // epoch millis
+    private List<Subject> subjects;
 
     public UserEntity toEntity(){
-        return new UserEntity(id, email, password, name, bio, image_url, role.toString(), created_at);
+        if (subjects == null) {
+            subjects = new ArrayList<>();
+        }
+
+        return new UserEntity(id, email, password, name, bio, image_url, role.toString(), created_at, subjects.stream().map(s -> s.toEntity(this)).toList());
     }
 
     public Response.User toApiResponse() {
