@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import pl.wsb.merito.skillbridge.adapter.database.match.MatchEntity;
 import pl.wsb.merito.skillbridge.adapter.database.subject.SubjectEntity;
 import pl.wsb.merito.skillbridge.domain.model.Role;
 import pl.wsb.merito.skillbridge.domain.model.User;
@@ -37,6 +38,8 @@ public class UserEntity {
     @OneToMany(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "user_id")
     private List<SubjectEntity> subjects;
+
+    private List<MatchEntity> matches;
 
 
     public User toDomain() {

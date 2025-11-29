@@ -9,6 +9,6 @@ import java.util.UUID;
 
 public interface UserRepository extends JpaRepository<UserEntity, UUID> {
     Optional<UserEntity> findByEmail(String email);
-    @Query("SELECT u from UserEntity u LEFT JOIN FETCH u.subjects WHERE u.role = :role")
-    List<UserEntity> findAllByRole(String role);
+    @Query("SELECT u from UserEntity u LEFT JOIN FETCH u.subjects s WHERE u.role = :role AND s.id IN :subjectIds")
+    List<UserEntity> findAllByRoleAndSubjectIds(String role, List<UUID> subjectIds);
 }
