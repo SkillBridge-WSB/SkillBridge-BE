@@ -10,6 +10,7 @@ public class Response {
         // Private constructor to prevent instantiation
     }
 
+    public record Swipe(UUID tutorId, int like){};
     @Builder
     public record User(UUID id, String email, String name, String bio, String imageUrl, String role) {}
     public record Subject(UUID id, String name, Integer costPerHour, String availability, UUID tutorId) {}
