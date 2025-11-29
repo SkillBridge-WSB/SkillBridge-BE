@@ -11,7 +11,9 @@ import pl.wsb.merito.skillbridge.domain.model.User;
 import pl.wsb.merito.skillbridge.rest.response.TutorListItemResponse;
 import pl.wsb.merito.skillbridge.rest.response.UserListItemResponse;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -38,6 +40,48 @@ public class UserEntity {
     @JoinColumn(name = "user_id")
     private List<SubjectEntity> subjects;
 
+    /**
+     * Jako student – lista tutorów, z którymi jestem sparowany.
+     */
+    @ManyToMany
+    @JoinTable(
+            name = "matches",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "tutor_id")
+    )
+    private Set<UserEntity> tutors;
+
+    /**
+     * Jako tutor – lista studentów, którzy są ze mną sparowani.
+     * To jest strona odwrotna (mappedBy).
+     */
+    @ManyToMany(mappedBy = "tutors")
+    private Set<UserEntity> students;
+
+    public void addMatch(UserEntity user) {
+        if (tutors == null) {
+            tutors = new HashSet<>();
+        }
+        if (students == null) {
+            students = new HashSet<>();
+        }
+
+        if (this.role.equals("STUDENT")) {
+            this.tutors.add(user);
+            user.getStudents().add(this);
+        } else {
+            this.students.add(user);
+            user.getTutors().add(this);
+        }
+    }
+
+    public Set<UserEntity> getMatches() {
+        if (this.role.equals("STUDENT")) {
+            return this.tutors;
+        } else {
+            return this.students;
+        }
+    }
 
     public User toDomain() {
         return User.builder()

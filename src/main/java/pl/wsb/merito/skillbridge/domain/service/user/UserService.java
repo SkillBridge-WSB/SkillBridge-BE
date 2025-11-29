@@ -5,9 +5,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.wsb.merito.skillbridge.adapter.database.user.UserEntity;
 import pl.wsb.merito.skillbridge.adapter.database.user.UserRepository;
+import pl.wsb.merito.skillbridge.domain.model.User;
 import pl.wsb.merito.skillbridge.rest.request.Request;
 import pl.wsb.merito.skillbridge.rest.response.Response;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -34,5 +36,14 @@ public class UserService {
     public void deleteUser(UUID userId) {
         UserEntity entity = userRepository.findById(userId).orElseThrow();
         userRepository.delete(entity);
+    }
+
+    public List<Response.User> getAllMatches(UUID userId) {
+        return userRepository.findMatchesById(userId).orElseThrow()
+                .getMatches()
+                .stream()
+                .map(UserEntity::toDomain)
+                .map(User::toApiResponse)
+                .toList();
     }
 }

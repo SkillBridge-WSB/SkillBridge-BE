@@ -11,4 +11,9 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
     Optional<UserEntity> findByEmail(String email);
     @Query("SELECT u from UserEntity u LEFT JOIN FETCH u.subjects WHERE u.role = :role")
     List<UserEntity> findAllByRole(String role);
+
+    @Query("SELECT u from UserEntity u LEFT JOIN FETCH u.students LEFT JOIN FETCH u.tutors WHERE u.id = :userId")
+    Optional<UserEntity> findMatchesById(UUID userId);
+
+    Optional<UserEntity> findByIdAndRole(UUID id, String role);
 }

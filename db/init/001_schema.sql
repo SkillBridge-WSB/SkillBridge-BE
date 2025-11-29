@@ -65,3 +65,12 @@ CREATE TABLE IF NOT EXISTS calendars (
     available    boolean NOT NULL DEFAULT true
 );
 CREATE INDEX IF NOT EXISTS idx_calendars_user_id ON calendars(user_id);
+
+CREATE TABLE "matches" (
+  student_id uuid,
+  tutor_id uuid,
+  primary key (student_id, tutor_id)
+);
+
+ALTER TABLE "students_friends" ADD FOREIGN KEY ("users_id") REFERENCES "users" ("id");
+ALTER TABLE "tutors_friends" ADD FOREIGN KEY ("matches_tutor_id") REFERENCES "matches" ("tutor_id");

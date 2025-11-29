@@ -10,6 +10,7 @@ import pl.wsb.merito.skillbridge.domain.service.user.UserService;
 import pl.wsb.merito.skillbridge.rest.request.Request;
 import pl.wsb.merito.skillbridge.rest.response.Response;
 
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -38,5 +39,11 @@ public class UserController {
     public void deleteUser(@CurrentUserId UUID userId) {
         log.debug("Deleting user ID: {}", userId);
         userService.deleteUser(userId);
+    }
+
+    @GetMapping("/matches")
+    public List<Response.User> getAllMatches(@CurrentUserId UUID userId) {
+        log.debug("");
+        return userService.getAllMatches(userId);
     }
 }
