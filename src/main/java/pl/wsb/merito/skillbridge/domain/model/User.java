@@ -28,7 +28,7 @@ public class User {
     private Long created_at; // epoch millis
 
     public UserEntity toEntity(){
-        return new UserEntity(id, email, password, name, bio, image_url, role.toString(), created_at);
+        return new UserEntity(id, email, password, name, bio, image_url, role.toString(), created_at, null);
     }
 
     public Response.User toApiResponse() {

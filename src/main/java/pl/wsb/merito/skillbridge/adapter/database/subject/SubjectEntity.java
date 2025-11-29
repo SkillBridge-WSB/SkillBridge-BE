@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import pl.wsb.merito.skillbridge.rest.response.Response;
+import pl.wsb.merito.skillbridge.rest.response.TutorListItemResponse;
 
 import java.util.UUID;
 
@@ -39,5 +40,14 @@ public class SubjectEntity {
                 this.availability,
                 this.tutorId
         );
+    }
+
+    public TutorListItemResponse.SubjectListItemResponse toSubjectListItem() {
+        return TutorListItemResponse.SubjectListItemResponse.builder()
+                .id(this.id.toString())
+                .name(this.name)
+                .costPerHour(this.costPerHour)
+                .availability(this.availability)
+                .build();
     }
 }
