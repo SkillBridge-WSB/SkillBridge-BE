@@ -20,7 +20,7 @@ import java.util.UUID;
 @RequestMapping(value = "${request-path}/tutor")
 @RequiredArgsConstructor
 @Slf4j
-@PreAuthorize("hasRole('STUDENT")
+@PreAuthorize("hasRole('STUDENT')")
 public class TutorController {
 
     private final TutorService tutorService;
@@ -29,6 +29,6 @@ public class TutorController {
     public List<TutorListItemResponse> getTutorsForSubjects(@CurrentUserId UUID userId,
                                                             @RequestBody Request.FindTutors req) {
         log.debug("Fetching list of tutors");
-        return tutorService.findAllTutorsForSubjects(req.subjectIds(), userId);
+        return tutorService.findAllTutorsForSubjects(req.subjects(), userId);
     }
 }

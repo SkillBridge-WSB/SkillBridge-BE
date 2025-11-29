@@ -39,6 +39,12 @@ public class User {
         if (subjects == null) {
             subjects = new ArrayList<>();
         }
+        if (tutors == null) {
+            tutors = Set.of();
+        }
+        if (students == null) {
+            students = Set.of();
+        }
 
         return new UserEntity(id, email, password, name, bio, image_url, role.toString(), created_at,
                 subjects
