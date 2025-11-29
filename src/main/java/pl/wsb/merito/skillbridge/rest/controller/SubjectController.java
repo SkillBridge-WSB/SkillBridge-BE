@@ -1,5 +1,6 @@
 package pl.wsb.merito.skillbridge.rest.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -24,7 +25,7 @@ public class SubjectController {
     @PostMapping
     @PreAuthorize("hasRole('TUTOR')")
     @ResponseStatus(HttpStatus.CREATED)
-    public Response.Subject create(@CurrentUserId UUID userId, @RequestBody Request.CreateSubject req) {
+    public Response.Subject create(@CurrentUserId UUID userId, @Valid @RequestBody Request.CreateSubject req) {
         log.debug("Creating subject for user ID: {} with details: {}", userId, req);
         return service.create(userId, req);
     }
