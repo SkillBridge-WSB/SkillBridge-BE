@@ -24,6 +24,15 @@ CREATE TABLE IF NOT EXISTS subjects (
 CREATE UNIQUE INDEX IF NOT EXISTS uq_subjects_user_name ON subjects(user_id, name);
 CREATE INDEX IF NOT EXISTS idx_subjects_user_id ON subjects(user_id);
 
+-- calendars (many-to-one to users)
+CREATE TABLE IF NOT EXISTS calendars (
+    id           uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id      uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    lesson_time  timestamp NOT NULL,
+    available    boolean NOT NULL DEFAULT true
+);
+CREATE INDEX IF NOT EXISTS idx_calendars_user_id ON calendars(user_id);
+
 -- lessons (references users; subject_name kept as provided)
 CREATE TABLE IF NOT EXISTS lessons (
     id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
@@ -57,20 +66,11 @@ CREATE TABLE IF NOT EXISTS messages (
 CREATE INDEX IF NOT EXISTS idx_messages_chat_id ON messages(chat_id);
 CREATE INDEX IF NOT EXISTS idx_messages_chat_time ON messages(chat_id, timestamp);
 
--- calendars (many-to-one to users)
-CREATE TABLE IF NOT EXISTS calendars (
-    id           uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_id      uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    lesson_time  timestamp NOT NULL,
-    available    boolean NOT NULL DEFAULT true
-);
-CREATE INDEX IF NOT EXISTS idx_calendars_user_id ON calendars(user_id);
-
 CREATE TABLE "matches" (
-  student_id uuid,
+  student_id uuid ,
   tutor_id uuid,
+  constraint student_friends foreign key (student_id) references "users" ("id"),
+  constraint tutor_friends foreign key (tutor_id) references "users" ("id"),
   primary key (student_id, tutor_id)
 );
 
-ALTER TABLE "students_friends" ADD FOREIGN KEY ("users_id") REFERENCES "users" ("id");
-ALTER TABLE "tutors_friends" ADD FOREIGN KEY ("matches_tutor_id") REFERENCES "matches" ("tutor_id");
