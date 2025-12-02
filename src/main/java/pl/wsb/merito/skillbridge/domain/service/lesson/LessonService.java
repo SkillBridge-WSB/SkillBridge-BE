@@ -15,6 +15,7 @@ import pl.wsb.merito.skillbridge.domain.model.Status;
 import pl.wsb.merito.skillbridge.rest.request.Request;
 import pl.wsb.merito.skillbridge.rest.response.Response;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -65,6 +66,18 @@ public class LessonService {
         }
         lesson.setStatus(Status.CANCELED.getValue());
         lesson.getSlot().setIsAvailable(true);
+    }
+
+    public List<Response.Lesson> getLessons(UUID userId, Role role) {
+        List<LessonEntity> lessons;
+        if (role == Role.TUTOR) {
+            lessons = lessonRepository.findByTutorId(userId);
+        } else {
+            lessons = lessonRepository.findByStudentId(userId);
+        }
+        return lessons.stream()
+                .map(LessonEntity::toApiResponse)
+                .toList();
     }
 
 }

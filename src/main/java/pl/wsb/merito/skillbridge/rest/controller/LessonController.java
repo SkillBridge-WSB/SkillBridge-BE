@@ -45,4 +45,10 @@ public class LessonController {
         log.debug("UserId: {} with role: {} cancelling lessonId: {}", userId, role, lessonId);
         service.cancel(userId, role, lessonId);
     }
+
+    @GetMapping
+    public java.util.List<Response.Lesson> getLessons(@CurrentUserId UUID userId, @CurrentUserRole Role role) {
+        log.debug("Getting lessons for userId: {} with role: {}", userId, role);
+        return service.getLessons(userId, role);
+    }
 }

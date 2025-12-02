@@ -5,14 +5,16 @@ import lombok.Getter;
 
 @Getter
 public enum Status {
-    PENDING("PENDING"), ACCEPTED("ACCEPTED"), COMPLETED("COMPLETED"), CANCELED("CANCELED");
+    PENDING("PENDING"), CONFIRMED("CONFIRMED"), REJECTED("REJECTED"), COMPLETED("COMPLETED"), CANCELED("CANCELED");
 
     private final String value;
+
     Status(String value) {
         this.value = value;
     }
 
-    public String toString(){
+    @Override
+    public String toString() {
         return String.valueOf(value);
     }
 
