@@ -2,6 +2,7 @@ package pl.wsb.merito.skillbridge.domain.service.chat;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.wsb.merito.skillbridge.adapter.database.chat.ChatEntity;
 import pl.wsb.merito.skillbridge.adapter.database.chat.ChatRepository;
 import pl.wsb.merito.skillbridge.adapter.database.chat.MessageEntity;
@@ -20,6 +21,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ChatService {
     private final ChatRepository chatRepository;
     private final MessageRepository messageRepository;
