@@ -1,6 +1,8 @@
 package pl.wsb.merito.skillbridge.rest.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -36,5 +38,17 @@ public class ChatController {
     @GetMapping("/{chatId}/messages")
     public List<ChatMessageResponse> getMessages(@PathVariable UUID chatId) {
         return chatService.getMessages(chatId);
+    }
+
+    @PostMapping("/chat/send-message")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ChatMessageResponse sendMessageRest(@Valid @RequestBody ChatMessageRequest chatMessage) {
+        ChatMessageResponse savedMsg = chatService.saveMessage(
+                chatMessage.getChatId(), chatMessage.getSenderId(), chatMessage.getMessage()).toApiResponse();
+
+        // Also broadcast via WebSocket for real-time updates
+        messagingTemplate.convertAndSend("/topic/chats/" + chatMessage.getChatId(), savedMsg);
+
+        return savedMsg;
     }
 }
